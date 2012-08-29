@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "GameState.h"
 
 void getInput(unsigned int &rows, unsigned int &cols, unsigned int **&matrix) {
 	scanf("%u %u\n", &rows, &cols);
@@ -24,11 +25,16 @@ unsigned int **cloneMatrix(unsigned int &rows, unsigned int &cols, unsigned int 
 }
 
 
-void printMatrix(FILE *stream, unsigned int &rows, unsigned int &cols, unsigned int **&matrix) {
+void printMatrix(FILE *stream, unsigned int rows, unsigned int cols, unsigned int **matrix) {
 	for(unsigned int iRow = 0; iRow < rows; iRow++) {
 		for(unsigned int iCol = 0; iCol < cols; iCol++) {
 			fprintf(stream, "%5u", matrix[iRow][iCol]);
 		}
 		fprintf(stream, "\n");
 	}
+}
+
+
+void printGameState(FILE *stream, GameState *gs) {
+	printMatrix(stream, gs->rows, gs->cols, gs->getAsArray());
 }
