@@ -1,11 +1,11 @@
-################################################################################
-###                             M A I N   A P P                              ###
-################################################################################
+########################################################################################################################
+###                                                 M A I N   A P P                                                  ###
+########################################################################################################################
 SOURCE=src
 INCLUDE=$(SOURCE)/include
 
-TastyBacon: $(SOURCE)/main.o $(INCLUDE)/utils.o
-	g++ $(INCLUDE)/utils.o $(SOURCE)/main.o -o TastyBacon
+TastyBacon: $(SOURCE)/main.o $(INCLUDE)/utils.o $(INCLUDE)/BfsStrategy.o $(INCLUDE)/GameState.o
+	g++ $(INCLUDE)/*.o $(SOURCE)/main.o -o TastyBacon
 	echo [TastyBacon] -- build successful!
 	
 clean:
@@ -14,18 +14,20 @@ clean:
 	echo [clean] -- done!
 		
 $(SOURCE)/main.o: $(SOURCE)/main.cpp
-	g++ -c $(SOURCE)/main.cpp -o $(SOURCE)/main.o
+	g++ -c $(SOURCE)/main.cpp -o $(SOURCE)/main.o 
 
-$(INCLUDE)/utils.o: $(INCLUDE)/utils.cpp $(INCLUDE)/utils.h
-	g++ -c $(INCLUDE)/utils.cpp -o $(INCLUDE)/utils.o
+$(INCLUDE)/utils.o: $(INCLUDE)/utils.cpp $(INCLUDE)/utils.h $(INCLUDE)/GameState.o
+	g++ -c $(INCLUDE)/GameState.o $(INCLUDE)/utils.cpp -o $(INCLUDE)/utils.o
 	
 $(INCLUDE)/GameState.o: $(INCLUDE)/GameState.cpp $(INCLUDE)/GameState.h
 	g++ -c $(INCLUDE)/GameState.cpp -o $(INCLUDE)/GameState.o
+	
+$(INCLUDE)/BfsStrategy.o: $(INCLUDE)/AbstractStrategy.h $(INCLUDE)/BfsStrategy.h $(INCLUDE)/BfsStrategy.cpp
+	g++ -c $(INCLUDE)/BfsStrategy.cpp -o $(INCLUDE)/BfsStrategy.o
 
-
-################################################################################
-###                                T E S T S                                 ###
-################################################################################
+########################################################################################################################
+###                                                    T E S T S                                                    ###
+########################################################################################################################
 TEST=$(SOURCE)/test
 
 test: GameStateTest
@@ -34,11 +36,12 @@ test: GameStateTest
 test-clean:
 	rm -f $(TEST)/*.answer
 	rm -f $(TEST)/*.o
+	rm -f $(INCLUDE)/GameState.o
+	rm -f $(TEST)/GameStateTest
 	echo [test-clean] -- done!	
 	
 GameStateTest: $(INCLUDE)/GameState.o $(TEST)/GameStateTest.cpp
-	g++ $(TEST)/GameStateTest.cpp $(INCLUDE)/GameState.o \
-		-o $(TEST)/GameStateTest
+	g++ $(TEST)/GameStateTest.cpp $(INCLUDE)/GameState.o -o $(TEST)/GameStateTest
 	./$(TEST)/GameStateTest > $(TEST)/GameStateTest.answer
 	diff -q $(TEST)/GameStateTest.answer $(TEST)/GameStateTest.correct
 	echo [GameStateTest] -- correct!
