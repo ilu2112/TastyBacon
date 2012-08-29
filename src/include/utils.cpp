@@ -1,5 +1,9 @@
 #include <stdio.h>
+#include <queue>
 #include "GameState.h"
+#include "Move.cpp"
+
+using namespace std;
 
 void getInput(unsigned int &rows, unsigned int &cols, unsigned int **&matrix) {
     scanf("%u %u\n", &rows, &cols);
@@ -37,4 +41,44 @@ void printMatrix(FILE *stream, unsigned int rows, unsigned int cols, unsigned in
 
 void printGameState(FILE *stream, GameState *gs) {
     printMatrix(stream, gs->rows, gs->cols, gs->getAsArray());
+}
+
+
+void moveLeft(unsigned int**matrix, unsigned int zeroRow, unsigned int zeroCol, Move* prevMove, 
+              queue<Move*> *moveQueue) {
+    if(zeroCol > 0) {
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow][zeroCol-1]);
+        moveQueue->push(new Move( new GameState(matrix), prevMove, 'L'));
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow][zeroCol-1]);
+    }
+}
+
+
+void moveRight(unsigned int**matrix, unsigned int zeroRow, unsigned int zeroCol, Move* prevMove, 
+              queue<Move*> *moveQueue) {
+    if(zeroCol < GameState::cols - 1) {
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow][zeroCol+1]);
+        moveQueue->push(new Move( new GameState(matrix), prevMove, 'P'));
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow][zeroCol+1]);
+    }
+}
+
+
+void moveDown(unsigned int**matrix, unsigned int zeroRow, unsigned int zeroCol, Move* prevMove, 
+              queue<Move*> *moveQueue) {
+    if(zeroRow < GameState::rows - 1) {
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow+1][zeroCol]);
+        moveQueue->push(new Move( new GameState(matrix), prevMove, 'D'));
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow+1][zeroCol]);
+    }
+}
+
+
+void moveUp(unsigned int**matrix, unsigned int zeroRow, unsigned int zeroCol, Move* prevMove, 
+              queue<Move*> *moveQueue) {
+    if(zeroRow > 0) {
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow-1][zeroCol]);
+        moveQueue->push(new Move( new GameState(matrix), prevMove, 'G'));
+        std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow-1][zeroCol]);
+    }
 }

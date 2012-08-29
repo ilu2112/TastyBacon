@@ -14,16 +14,16 @@ class GameState {
     
         GameState(long long int state);
         
+        GameState(unsigned int **array);
+        
         static void setSize(unsigned int rows, 
                             unsigned int cols);     
                             
-        static long long int getAsInt(unsigned int **array, 
-                                      unsigned int rows, 
-                                      unsigned int cols);
+        static long long int getAsInt(unsigned int **array);
                                       
         static unsigned int **getAsArray(long long int state);
         
-        static GameState *getFinalGameState(unsigned int rows, unsigned int cols);
+        static GameState *getFinalGameState();
         
         unsigned int **getAsArray();
         
@@ -31,6 +31,19 @@ class GameState {
         
         bool operator==(const GameState &gs) const;
         
+        bool operator!=(const GameState &gs) const;
+        
+        bool operator>(const GameState &gs) const;
+        
+        bool operator<(const GameState &gs) const;
+        
+        bool operator<(const GameState* gs) const;
+        
+        
+        struct Comparator {
+            bool operator() (const GameState* lhs, const GameState* rhs) const;
+        };
+
 };
 
 #endif
