@@ -6,12 +6,12 @@
 
 
 class AbstractStrategy {
-	
-	public:
-	
-		virtual char *solve(GameState *state, 
-							const char *storateFileName) = 0;
-							  
+    
+    public:
+    
+        virtual char *solve(GameState *state, 
+                            const char *storateFileName) = 0;
+                              
 };
 
 

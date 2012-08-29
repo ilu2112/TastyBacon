@@ -3,14 +3,14 @@
 
 
 BfsStrategy::BfsStrategy(char *order) {
-	this->order = new char[ strlen(order) ];
-	for(unsigned int i = 0; i < strlen(order); i++) {
-		this->order[i] = order[i];
-	}
+    this->order = new char[ strlen(order) ];
+    for(unsigned int i = 0; i < strlen(order); i++) {
+        this->order[i] = order[i];
+    }
 }
 
 
 char *BfsStrategy::solve(GameState *state, const char *storateFileName) {
-	char *result = this->order;
-	return result;
+    char *result = this->order;
+    return result;
 }
