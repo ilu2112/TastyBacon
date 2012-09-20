@@ -7,6 +7,7 @@
 #include <vector>
 #include <set>
 #include <queue>
+#include <stack>
 #include <algorithm>
 #include <string.h>
 
@@ -33,7 +34,10 @@ char *BfsStrategy::solve(GameState *state, const char *storageFileName) {
     
     // get final state
     GameState *finalState = GameState::getFinalGameState();
-   
+
+    // stack for final steps (result)
+    stack<char> finalSteps;
+    
     // start solving
     do {
         
@@ -43,18 +47,15 @@ char *BfsStrategy::solve(GameState *state, const char *storageFileName) {
         
         // check if we have a visited state
         if(visitedStates->find(move->actualState) != visitedStates->end()) {
-            printf("visited!\n");
-            break;
+            continue;
         }
         
         // check if it is done
         if(*(move->actualState) == *finalState) {
-            printf("done!\n");
             while(move->prevMove != NULL) {
-                printf("%c", move->movement);
+                finalSteps.push(move->movement);
                 move = move->prevMove;
             }
-            printf("\n");
             break;
         }
         
@@ -64,18 +65,48 @@ char *BfsStrategy::solve(GameState *state, const char *storageFileName) {
         for(unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
             for(unsigned int iCol = 0; iCol < GameState::cols; iCol++) {
                 if(matrix[iRow][iCol] == 0) {
-                    // process all moves
-                    moveDown(matrix, iRow, iCol, move, moveQueue);
-                    moveUp(matrix, iRow, iCol, move, moveQueue);
-                    moveLeft(matrix, iRow, iCol, move, moveQueue);
-                    moveRight(matrix, iRow, iCol, move, moveQueue);
+                    // find the right movement order
+                    char *order;
+                    if (this->order[0] == 'R') {
+                        order = getRandomMoveOrder();
+                    } else {
+                        order = this->order;
+                    }
+                    //  process all moves
+                    for(int i=0; i<4; i++) {
+                        switch (order[i]) {
+                            case 'D':
+                                moveDown(matrix, iRow, iCol, move, moveQueue);
+                                break;
+                            case 'G':
+                                moveUp(matrix, iRow, iCol, move, moveQueue);
+                                break;
+                            case 'L':
+                                moveLeft(matrix, iRow, iCol, move, moveQueue);
+                                break;
+                            case 'P':
+                                moveRight(matrix, iRow, iCol, move, moveQueue);
+                                break;
+                        }
+                    }
                 }
             }
         }
         
+        // clean-up
+        for(unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
+            delete[] matrix[iRow];
+        }
+        delete[] matrix;
+        
     } while(true);
     
-    // form result
-    char *result = new char[10];
+    // form a result
+    char *result = new char[finalSteps.size()];
+    unsigned int count = 0;
+    while(!finalSteps.empty()) {
+        result[count++] = finalSteps.top();
+        finalSteps.pop();
+    }
     return result;
 }

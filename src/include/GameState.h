@@ -41,7 +41,8 @@ class GameState {
         
         
         struct Comparator {
-            bool operator() (const GameState* lhs, const GameState* rhs) const;
+            bool operator() (const GameState* lhs, 
+                            const GameState* rhs) const;
         };
 
 };

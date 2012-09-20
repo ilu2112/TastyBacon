@@ -52,5 +52,6 @@ void moveUp(unsigned int**matrix,
             Move* prevMove,
             queue<Move*> *moveQueue);
 
+char *getRandomMoveOrder();
 
 #endif

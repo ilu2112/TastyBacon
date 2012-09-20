@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <queue>
+#include <algorithm>
+#include <time.h>
 #include "GameState.h"
 #include "Move.cpp"
 
@@ -81,4 +83,18 @@ void moveUp(unsigned int**matrix, unsigned int zeroRow, unsigned int zeroCol, Mo
         moveQueue->push(new Move( new GameState(matrix), prevMove, 'G'));
         std::swap(matrix[zeroRow][zeroCol], matrix[zeroRow-1][zeroCol]);
     }
+}
+
+
+char *getRandomMoveOrder() {
+    char *result = new char[4];
+    result[0] = 'G';
+    result[1] = 'D';
+    result[2] = 'L';
+    result[3] = 'P';
+    srand( time(NULL) );
+    for(int i=0; i<10; i++) {
+        swap(result[random() % 4], result[random() % 4]);
+    }
+    return result;
 }

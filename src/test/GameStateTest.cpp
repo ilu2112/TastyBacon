@@ -7,6 +7,7 @@ int main() {
     // make an array of values
     unsigned int rows = 3;
     unsigned int cols = 3;
+    GameState::setSize(rows, cols);
     unsigned int counter = 0;
     unsigned int **array = new unsigned int*[rows];
     for(unsigned int i=0; i<rows; i++) {
@@ -17,7 +18,7 @@ int main() {
     }
     
     // get state's value
-    long long int stateVal = GameState::getAsInt(array, rows, cols);
+    long long int stateVal = GameState::getAsInt(array);
     
     // test GameState::getAsInt
     printf("%lld\n", stateVal);
