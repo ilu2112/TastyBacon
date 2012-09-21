@@ -6,13 +6,14 @@
 class BfsStrategy : public AbstractStrategy {
 
     private:
-    
+
         char *order;
-        
+        int maxDepth;
+
     public:
-        
+
         BfsStrategy(char *order);
-        virtual char *solve(GameState *state, 
+        virtual char *solve(GameState *state,
                             const char *storageFileName);
 
 };
