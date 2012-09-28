@@ -1,14 +1,13 @@
-//  BFS Strategy with FIFO queue.
+// Pass FifoQueue as AbstractQueue in contructor to get BFS Strategy.
+// Pass LifoQueue as AbstractQueue in contructor to get DFS Strategy.
 
 #include <algorithm>
-#include <queue>
 #include <set>
 #include <stack>
 #include <stdio.h>
 #include <string.h>
-#include <vector>
 
-#include "BfsStrategy.h"
+#include "BrutalStrategy.h"
 #include "../utils/GameState.h"
 #include "../utils/Move.cpp"
 #include "../utils/utils.h"
@@ -16,20 +15,20 @@
 using namespace std;
 
 
-
-BfsStrategy::BfsStrategy(char * order) {
+BrutalStrategy::BrutalStrategy(char * order, AbstractQueue<Move *> * moveQueue, unsigned int maxDepth) {
     this->order = new char[strlen(order)];
     for (unsigned int i = 0; i < strlen(order); i++) {
         this->order[i] = order[i];
     }
+    this->moveQueue = moveQueue;
+    this->maxDepth = maxDepth;
 }
 
 
-char * BfsStrategy::solve(GameState * state, const char * storageFileName) {
+char * BrutalStrategy::solve(GameState * state, const char * storageFileName) {
 
-    // create a set of visited states and a FIFO queue
+    // create a set of visited states
     set<GameState *, GameState::Comparator> * visitedStates = new set<GameState *, GameState::Comparator>();
-    queue<Move *> * moveQueue = new queue<Move *>();
 
     // initial values
     moveQueue->push(new Move(state, NULL, 'X'));
@@ -39,11 +38,11 @@ char * BfsStrategy::solve(GameState * state, const char * storageFileName) {
 
     // stack for final steps (result)
     stack<char> finalSteps;
-    
+
     // start solving
     do {
         // get next state
-        Move * move = moveQueue->front();
+        Move * move = moveQueue->next();
         moveQueue->pop();
 
         // check if we have a visited state
@@ -89,6 +88,11 @@ char * BfsStrategy::solve(GameState * state, const char * storageFileName) {
             delete[] matrix[iRow];
         }
         delete[] matrix;
+
+        // check if we have no more moves
+        if (moveQueue->isEmpty()) {
+            break;
+        }
 
     } while(true);
 
