@@ -1,7 +1,7 @@
-#include "include/utils.h"
-#include "include/AbstractStrategy.h"
-#include "include/BfsStrategy.h"
-#include "include/GameState.h"
+#include "utils/utils.h"
+#include "strategy/AbstractStrategy.h"
+#include "strategy/BfsStrategy.h"
+#include "utils/GameState.h"
 #include <stdio.h>
 #include <set>
 using namespace std;
@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     GameState::setSize(rows, cols);
     GameState *gs = new GameState(matrix);
 
-    char order[] = {'L', 'G', 'P', 'D'};
+    char order[] = {'L', 'G', 'P', 'D', 0};
     AbstractStrategy *strategy = new BfsStrategy(order);
     printf("%s\n", strategy->solve(gs, "ciotka"));
 

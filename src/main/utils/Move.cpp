@@ -5,11 +5,11 @@
 
 struct Move {
     
-    GameState *actualState;
-    Move *prevMove;
+    GameState * actualState;
+    Move * prevMove;
     char movement;
     
-    Move(GameState *actual, Move *prev, char movement) {
+    Move(GameState * actual, Move * prev, char movement) {
         this->actualState = actual;
         this->prevMove = prev;
         this->movement = movement;
