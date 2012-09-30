@@ -8,8 +8,9 @@ STRATEGY=$(SOURCE)/strategy
 QUEUE=$(SOURCE)/queue
 
 
-TastyBacon: $(SOURCE)/main.o $(UTILS)/utils.o $(STRATEGY)/BrutalStrategy.o $(UTILS)/GameState.o
-	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/main.o -o TastyBacon
+TastyBacon: $(SOURCE)/main.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
+		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o
+	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/main.o $(QUEUE)/*.o -o TastyBacon
 	echo [TastyBacon] -- build successful!
 	make -s clean
 
@@ -19,9 +20,9 @@ $(SOURCE)/main.o:
 	echo [$(SOURCE)/main.o] -- build successful!
 
 
-$(STRATEGY)/BrutalStrategy.o:
-	g++ -c $(STRATEGY)/BrutalStrategy.cpp -o $(STRATEGY)/BrutalStrategy.o
-	echo [$(STRATEGY)/BrutalStrategy.o] -- build successful!
+$(STRATEGY)/BaseStrategy.o:
+	g++ -c $(STRATEGY)/BaseStrategy.cpp -o $(STRATEGY)/BaseStrategy.o
+	echo [$(STRATEGY)/BaseStrategy.o] -- build successful!
 
 
 $(UTILS)/utils.o:
@@ -39,10 +40,21 @@ $(UTILS)/Move.o:
 	echo [$(UTILS)/Move.o] -- build successful!
 
 
+${QUEUE}/FifoMoveQueue.o:
+	g++ -c $(QUEUE)/FifoMoveQueue.cpp -o $(QUEUE)/FifoMoveQueue.o
+	echo [${QUEUE}/FifoMoveQueue.o] -- build successful!
+
+
+${QUEUE}/LifoMoveQueue.o:
+	g++ -c $(QUEUE)/LifoMoveQueue.cpp -o $(QUEUE)/LifoMoveQueue.o
+	echo [${QUEUE}/LifoMoveQueue.o] -- build successful!
+
+
 clean:
 	rm -f $(SOURCE)/*.o
 	rm -f $(UTILS)/*.o
 	rm -f $(STRATEGY)/*.o
+	rm -f $(QUEUE)/*.o
 	echo [clean] -- done!
 
 
@@ -54,7 +66,6 @@ clean:
 TEST=src/test
 T_UTILS=$(TEST)/utils
 T_STRATEGY=$(TEST)/strategy
-T_QUEUE=$(TEST)/queue
 
 
 COMPARE =	( \
@@ -67,8 +78,6 @@ COMPARE =	( \
 
 test:
 	make -s GameStateTest
-	make -s FifoQueueTest
-	make -s LifoQueueTest
 	make -s test-clean
 	make -s clean
 
@@ -77,10 +86,6 @@ test-clean:
 	rm  -f $(T_UTILS)/*.answer
 	rm  -f $(T_UTILS)/*.o
 	rm  -f $(T_UTILS)/GameStateTest
-	rm  -f $(T_QUEUE)/*.answer
-	rm  -f $(T_QUEUE)/*.o
-	rm  -f $(T_QUEUE)/FifoQueueTest
-	rm  -f $(T_QUEUE)/LifoQueueTest
 	echo [test-clean] -- done!
 
 
@@ -88,15 +93,3 @@ GameStateTest: $(UTILS)/GameState.o
 	g++ $(T_UTILS)/GameStateTest.cpp $(UTILS)/GameState.o -o $(T_UTILS)/GameStateTest
 	./$(T_UTILS)/GameStateTest > $(T_UTILS)/GameStateTest.answer
 	$(call COMPARE,GameStateTest, $(T_UTILS)/GameStateTest.answer, $(T_UTILS)/GameStateTest.correct)
-
-
-FifoQueueTest:
-	g++ $(T_QUEUE)/FifoQueueTest.cpp -o $(T_QUEUE)/FifoQueueTest
-	./$(T_QUEUE)/FifoQueueTest > $(T_QUEUE)/FifoQueueTest.answer
-	$(call COMPARE,FifoQueueTest, $(T_QUEUE)/FifoQueueTest.answer, $(T_QUEUE)/FifoQueueTest.correct)
-
-
-LifoQueueTest:
-	g++ $(T_QUEUE)/LifoQueueTest.cpp -o $(T_QUEUE)/LifoQueueTest
-	./$(T_QUEUE)/LifoQueueTest > $(T_QUEUE)/LifoQueueTest.answer
-	$(call COMPARE,LifoQueueTest, $(T_QUEUE)/LifoQueueTest.answer, $(T_QUEUE)/LifoQueueTest.correct)

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "BrutalStrategy.h"
+#include "BaseStrategy.h"
 #include "../utils/GameState.h"
 #include "../utils/Move.cpp"
 #include "../utils/utils.h"
@@ -15,7 +15,7 @@
 using namespace std;
 
 
-BrutalStrategy::BrutalStrategy(char * order, AbstractQueue<Move *> * moveQueue, unsigned int maxDepth) {
+BaseStrategy::BaseStrategy(char * order, AbstractMoveQueue * moveQueue, unsigned int maxDepth) {
     this->order = new char[strlen(order)];
     for (unsigned int i = 0; i < strlen(order); i++) {
         this->order[i] = order[i];
@@ -25,7 +25,7 @@ BrutalStrategy::BrutalStrategy(char * order, AbstractQueue<Move *> * moveQueue, 
 }
 
 
-char * BrutalStrategy::solve(GameState * state, const char * storageFileName) {
+char * BaseStrategy::solve(GameState * state, const char * storageFileName) {
 
     // create a set of visited states
     set<GameState *, GameState::Comparator> * visitedStates = new set<GameState *, GameState::Comparator>();
@@ -44,11 +44,21 @@ char * BrutalStrategy::solve(GameState * state, const char * storageFileName) {
         // get next state
         Move * move = moveQueue->next();
         moveQueue->pop();
-
+        
+        // check if recursion depth is too high
+        if (move->recursionDepth > this->maxDepth) {
+            continue;
+        }
+        
         // check if we have a visited state
         if (visitedStates->find(move->actualState) != visitedStates->end()) {
             continue;
+        } else {
+            visitedStates->insert(move->actualState);
         }
+        
+        // print actual status to the specified file
+        // ...
 
         // check if it is done
         if ( *(move->actualState) == *finalState) {
