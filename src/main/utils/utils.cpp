@@ -45,6 +45,7 @@ void printMatrix(FILE * stream, unsigned int rows, unsigned int cols, unsigned i
 
 
 void printGameState(FILE * stream, GameState * gs) {
+    fprintf(stream, "%d %d\n", GameState::rows, GameState::cols);
     printMatrix(stream, gs->rows, gs->cols, gs->getAsArray());
 }
 
@@ -66,14 +67,14 @@ Move * doMove(unsigned int ** matrix, unsigned int zeroRow, unsigned int zeroCol
             ++newCol;
             break;
     }
-    
+
     Move * move = NULL;
     if (newCol >= 0 && newRow >= 0 && newCol < GameState::cols && newRow < GameState::rows) {
         std::swap(matrix[zeroRow][zeroCol], matrix[newRow][newCol]);
         move = new Move( new GameState(matrix), prevMove, direction);
         std::swap(matrix[zeroRow][zeroCol], matrix[newRow][newCol]);
     }
-    
+
     return move;
 }
 

@@ -8,16 +8,22 @@ STRATEGY=$(SOURCE)/strategy
 QUEUE=$(SOURCE)/queue
 
 
-TastyBacon: $(SOURCE)/main.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
-		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o
-	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/main.o $(QUEUE)/*.o -o TastyBacon
+TastyBacon: $(SOURCE)/Solver.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
+		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o $(SOURCE)/Viewer.o
+	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/Solver.o $(QUEUE)/*.o -o Solver
+	g++ $(SOURCE)/Viewer.o -lncurses -o Viewer
 	echo [TastyBacon] -- build successful!
 	make -s clean
 
 
-$(SOURCE)/main.o:
-	g++ -c $(SOURCE)/main.cpp -o $(SOURCE)/main.o
-	echo [$(SOURCE)/main.o] -- build successful!
+$(SOURCE)/Solver.o:
+	g++ -c $(SOURCE)/Solver.cpp -o $(SOURCE)/Solver.o
+	echo [$(SOURCE)/Solver.o] -- build successful!
+
+
+$(SOURCE)/Viewer.o:
+	g++ -c $(SOURCE)/Viewer.cpp -o $(SOURCE)/Viewer.o
+	echo [$(SOURCE)/Viewer.o] -- build successful!
 
 
 $(STRATEGY)/BaseStrategy.o:
@@ -78,6 +84,7 @@ COMPARE =	( \
 
 test:
 	make -s GameStateTest
+	make -s BiggestGameStateTest
 	make -s test-clean
 	make -s clean
 
@@ -86,10 +93,17 @@ test-clean:
 	rm  -f $(T_UTILS)/*.answer
 	rm  -f $(T_UTILS)/*.o
 	rm  -f $(T_UTILS)/GameStateTest
+	rm  -f $(T_UTILS)/BiggestGameStateTest
 	echo [test-clean] -- done!
 
 
 GameStateTest: $(UTILS)/GameState.o
 	g++ $(T_UTILS)/GameStateTest.cpp $(UTILS)/GameState.o -o $(T_UTILS)/GameStateTest
 	./$(T_UTILS)/GameStateTest > $(T_UTILS)/GameStateTest.answer
-	$(call COMPARE,GameStateTest, $(T_UTILS)/GameStateTest.answer, $(T_UTILS)/GameStateTest.correct)
+	$(call COMPARE,GameStateTest,$(T_UTILS)/GameStateTest.answer,$(T_UTILS)/GameStateTest.correct)
+
+
+BiggestGameStateTest: $(UTILS)/GameState.o $(UTILS)/utils.o
+	g++ $(T_UTILS)/BiggestGameStateTest.cpp $(UTILS)/GameState.o $(UTILS)/utils.o -o $(T_UTILS)/BiggestGameStateTest
+	./$(T_UTILS)/BiggestGameStateTest > $(T_UTILS)/BiggestGameStateTest.answer
+	$(call COMPARE,BiggestGameStateTest,$(T_UTILS)/BiggestGameStateTest.answer,$(T_UTILS)/BiggestGameStateTest.correct)

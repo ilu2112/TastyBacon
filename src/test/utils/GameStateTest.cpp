@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "../../main/utils/GameState.h"
-#include "../../main/utils/utils.h"
 
 int main() {
 

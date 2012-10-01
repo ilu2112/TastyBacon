@@ -20,7 +20,7 @@ void GameState::setSize(unsigned int rows, unsigned int cols) {
     GameState::rows = rows;
     GameState::cols = cols;
 }
-    
+
 
 long long int GameState::getAsInt(unsigned int ** array) {
     long long int result = 0;
@@ -34,15 +34,15 @@ long long int GameState::getAsInt(unsigned int ** array) {
     return result;
 }
 
-    
+
 unsigned int ** GameState::getAsArray(long long int state) {
     unsigned int ** result = new unsigned int*[GameState::rows];
-    long long int base = 0xF;
+    unsigned long long int base = 0xF;
     int counter = 0;
     for (unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
         result[iRow] = new unsigned int[GameState::cols];
         for (unsigned int iCol = 0; iCol < GameState::cols; iCol++) {
-            result[iRow][iCol] = (state & (base << (60 - 4 * counter))) >> (60 - 4 * counter); 
+            result[iRow][iCol] = (state & (base << (60 - 4 * counter))) >> (60 - 4 * counter);
             ++counter;
         }
     }
@@ -97,7 +97,7 @@ GameState * GameState::getFinalGameState() {
     for (unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
         matrix[iRow] = new unsigned int[GameState::cols];
         for (unsigned int iCol = 0; iCol < GameState::cols; iCol++) {
-            matrix[iRow][iCol] = counter; 
+            matrix[iRow][iCol] = counter;
             counter = (counter + 1) % capacity;
         }
     }

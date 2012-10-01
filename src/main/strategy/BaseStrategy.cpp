@@ -44,21 +44,25 @@ char * BaseStrategy::solve(GameState * state, const char * storageFileName) {
         // get next state
         Move * move = moveQueue->next();
         moveQueue->pop();
-        
+
         // check if recursion depth is too high
         if (move->recursionDepth > this->maxDepth) {
             continue;
         }
-        
+
         // check if we have a visited state
         if (visitedStates->find(move->actualState) != visitedStates->end()) {
             continue;
         } else {
             visitedStates->insert(move->actualState);
         }
-        
+
         // print actual status to the specified file
-        // ...
+        FILE * storageFile = fopen(storageFileName, "w");
+        if (storageFile != NULL) {
+            printGameState(storageFile, move->actualState);
+            fclose(storageFile);
+        }
 
         // check if it is done
         if ( *(move->actualState) == *finalState) {
