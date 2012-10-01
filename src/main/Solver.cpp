@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     unsigned int cols;
     unsigned int **matrix;
     getInput(rows, cols, matrix);
-    printMatrix(stdout, rows, cols, matrix);
+    // printMatrix(stdout, rows, cols, matrix);
 
     GameState::setSize(rows, cols);
     GameState *gs = new GameState(matrix);
@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     char order[] = {'L', 'G', 'P', 'D', 0};
     // AbstractStrategy *strategy = new BfsStrategy(order);
     AbstractStrategy *strategy = new BaseStrategy(order, new LifoMoveQueue());
-    printf("%s\n", strategy->solve(gs, "ciotka"));
+    printf("%s\n", strategy->solve(gs, "tmpFile"));
 
     return 0;
 }
