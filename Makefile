@@ -9,7 +9,8 @@ QUEUE=$(SOURCE)/queue
 
 
 TastyBacon: $(SOURCE)/Solver.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
-		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o $(SOURCE)/Viewer.o
+		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o $(QUEUE)/AbstractPriorityQueue.o \
+		    ${QUEUE}/BestMatchingPriorityQueue.o ${QUEUE}/ShortestMatchingPriorityQueue.o $(SOURCE)/Viewer.o
 	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/Solver.o $(QUEUE)/*.o -o Solver
 	g++ $(SOURCE)/Viewer.o -lncurses -o Viewer
 	echo [TastyBacon] -- build successful!
@@ -56,6 +57,20 @@ ${QUEUE}/LifoMoveQueue.o:
 	echo [${QUEUE}/LifoMoveQueue.o] -- build successful!
 
 
+${QUEUE}/AbstractPriorityQueue.o:
+	g++ -c $(QUEUE)/AbstractPriorityQueue.cpp -o $(QUEUE)/AbstractPriorityQueue.o
+	echo [${QUEUE}/AbstractPriorityQueue.o] -- build successful!
+	
+
+${QUEUE}/BestMatchingPriorityQueue.o:
+	g++ -c $(QUEUE)/BestMatchingPriorityQueue.cpp -o $(QUEUE)/BestMatchingPriorityQueue.o
+	echo [${QUEUE}/BestMatchingPriorityQueue.o] -- build successful!
+
+
+${QUEUE}/ShortestMatchingPriorityQueue.o:
+	g++ -c $(QUEUE)/ShortestMatchingPriorityQueue.cpp -o $(QUEUE)/ShortestMatchingPriorityQueue.o
+	echo [${QUEUE}/ShortestMatchingPriorityQueue.o] -- build successful!
+
 clean:
 	rm -f $(SOURCE)/*.o
 	rm -f $(UTILS)/*.o
@@ -72,6 +87,7 @@ clean:
 TEST=src/test
 T_UTILS=$(TEST)/utils
 T_STRATEGY=$(TEST)/strategy
+T_QUEUE=$(TEST)/queue
 
 
 COMPARE =	( \
@@ -85,6 +101,8 @@ COMPARE =	( \
 test:
 	make -s GameStateTest
 	make -s BiggestGameStateTest
+	make -s BestMatchingPriorityQueueTest
+	make -s ShortestMatchingPriorityQueueTest
 	make -s test-clean
 	make -s clean
 
@@ -94,6 +112,10 @@ test-clean:
 	rm  -f $(T_UTILS)/*.o
 	rm  -f $(T_UTILS)/GameStateTest
 	rm  -f $(T_UTILS)/BiggestGameStateTest
+	rm  -f $(T_QUEUE)/*.answer
+	rm  -f $(T_QUEUE)/*.o
+	rm  -f $(T_QUEUE)/BestMatchingPriorityQueueTest
+	rm  -f $(T_QUEUE)/ShortestMatchingPriorityQueueTest
 	echo [test-clean] -- done!
 
 
@@ -107,3 +129,23 @@ BiggestGameStateTest: $(UTILS)/GameState.o $(UTILS)/utils.o
 	g++ $(T_UTILS)/BiggestGameStateTest.cpp $(UTILS)/GameState.o $(UTILS)/utils.o -o $(T_UTILS)/BiggestGameStateTest
 	./$(T_UTILS)/BiggestGameStateTest > $(T_UTILS)/BiggestGameStateTest.answer
 	$(call COMPARE,BiggestGameStateTest,$(T_UTILS)/BiggestGameStateTest.answer,$(T_UTILS)/BiggestGameStateTest.correct)
+
+
+BestMatchingPriorityQueueTest: $(UTILS)/GameState.o $(UTILS)/Move.o ${QUEUE}/BestMatchingPriorityQueue.o \
+		${QUEUE}/AbstractPriorityQueue.o
+	g++ $(T_QUEUE)/BestMatchingPriorityQueueTest.cpp $(UTILS)/GameState.o $(UTILS)/Move.o \
+		${QUEUE}/BestMatchingPriorityQueue.o ${QUEUE}/AbstractPriorityQueue.o \
+		-o $(T_QUEUE)/BestMatchingPriorityQueueTest
+	./$(T_QUEUE)/BestMatchingPriorityQueueTest > $(T_QUEUE)/BestMatchingPriorityQueueTest.answer
+	$(call COMPARE,BestMatchingPriorityQueueTest,$(T_QUEUE)/BestMatchingPriorityQueueTest.answer,\
+		$(T_QUEUE)/BestMatchingPriorityQueueTest.correct)
+		
+		
+ShortestMatchingPriorityQueueTest: $(UTILS)/GameState.o $(UTILS)/Move.o ${QUEUE}/ShortestMatchingPriorityQueue.o \
+		${QUEUE}/AbstractPriorityQueue.o
+	g++ $(T_QUEUE)/ShortestMatchingPriorityQueueTest.cpp $(UTILS)/GameState.o $(UTILS)/Move.o \
+		${QUEUE}/ShortestMatchingPriorityQueue.o ${QUEUE}/AbstractPriorityQueue.o \
+		-o $(T_QUEUE)/ShortestMatchingPriorityQueueTest
+	./$(T_QUEUE)/ShortestMatchingPriorityQueueTest > $(T_QUEUE)/ShortestMatchingPriorityQueueTest.answer
+	$(call COMPARE,ShortestMatchingPriorityQueueTest,$(T_QUEUE)/ShortestMatchingPriorityQueueTest.answer,\
+		$(T_QUEUE)/ShortestMatchingPriorityQueueTest.correct)

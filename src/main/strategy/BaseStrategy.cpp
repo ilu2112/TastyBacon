@@ -25,7 +25,7 @@ BaseStrategy::BaseStrategy(char * order, AbstractMoveQueue * moveQueue, unsigned
 }
 
 
-char * BaseStrategy::solve(GameState * state, const char * storageFileName) {
+char * BaseStrategy::solve(GameState * state) {
 
     // create a set of visited states
     set<GameState *, GameState::Comparator> * visitedStates = new set<GameState *, GameState::Comparator>();
@@ -55,13 +55,6 @@ char * BaseStrategy::solve(GameState * state, const char * storageFileName) {
             continue;
         } else {
             visitedStates->insert(move->actualState);
-        }
-
-        // print actual status to the specified file
-        FILE * storageFile = fopen(storageFileName, "w");
-        if (storageFile != NULL) {
-            printGameState(storageFile, move->actualState);
-            fclose(storageFile);
         }
 
         // check if it is done

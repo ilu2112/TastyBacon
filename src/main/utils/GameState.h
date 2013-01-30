@@ -6,7 +6,11 @@ class GameState {
     private:
         
         long long int state;
-
+        
+        GameState();
+        
+        GameState * createFinalGameState();
+        
     public:
     
         static unsigned int rows;

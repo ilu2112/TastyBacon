@@ -20,8 +20,7 @@ class BaseStrategy : public AbstractStrategy {
                      AbstractMoveQueue * moveQueue,
                      unsigned int maxDepth = 1000000);
 
-        virtual char * solve(GameState * state,
-                             const char * storageFileName);
+        virtual char * solve(GameState * state);
 
 };
 

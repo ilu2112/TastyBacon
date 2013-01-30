@@ -8,8 +8,7 @@ class AbstractStrategy {
 
     public:
 
-        virtual char * solve(GameState * state,
-                             const char * storageFileName) = 0;
+        virtual char * solve(GameState * state) = 0;
 
 };
 

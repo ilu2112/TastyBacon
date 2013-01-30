@@ -1,5 +1,5 @@
 #include "GameState.h"
-
+#include <cstddef>
 
 
 unsigned int GameState::rows = 0;
@@ -90,7 +90,19 @@ bool GameState::Comparator::operator() (const GameState * lhs, const GameState *
 }
 
 
+// singleton
+GameState::GameState() {
+    this->state = this->createFinalGameState()->getAsInt();
+}
+
+
 GameState * GameState::getFinalGameState() {
+    static GameState * finalGameState = new GameState();
+    return finalGameState;
+}
+
+
+GameState * GameState::createFinalGameState() {
     unsigned int counter = 1;
     unsigned int capacity = GameState::rows * GameState::cols;
     unsigned int **matrix = new unsigned int*[GameState::rows];
@@ -103,5 +115,3 @@ GameState * GameState::getFinalGameState() {
     }
     return new GameState(GameState::getAsInt(matrix));
 }
-
-
