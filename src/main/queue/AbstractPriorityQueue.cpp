@@ -20,7 +20,7 @@ Move * AbstractPriorityQueue::next() {
 
 
 void AbstractPriorityQueue::push(Move * move) {
-    this->queue->insert(make_pair(this->evaluate(move), move));
+    this->queue->insert(make_pair(this->evaluate(move) + move->recursionDepth, move));
 }
 
 
