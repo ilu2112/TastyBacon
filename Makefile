@@ -10,12 +10,14 @@ QUEUE=$(SOURCE)/queue
 
 TastyBacon: $(SOURCE)/Solver.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
 		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o $(QUEUE)/AbstractPriorityQueue.o \
-		    ${QUEUE}/BestMatchingPriorityQueue.o ${QUEUE}/ShortestMatchingPriorityQueue.o $(SOURCE)/Viewer.o
+		    ${QUEUE}/BestMatchingPriorityQueue.o ${QUEUE}/ShortestMatchingPriorityQueue.o $(SOURCE)/Viewer.o \
+		    $(SOURCE)/Generator.o
 	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/Solver.o $(QUEUE)/*.o -o Solver
 	g++ $(SOURCE)/Viewer.o -lncurses -o Viewer
+	g++ $(STRATEGY)/*.o $(UTILS)/GameState.o $(SOURCE)/Generator.o $(QUEUE)/*.o -o Generator
 	echo [TastyBacon] -- build successful!
 	make -s clean
-
+	
 
 $(SOURCE)/Solver.o:
 	g++ -c $(SOURCE)/Solver.cpp -o $(SOURCE)/Solver.o
@@ -25,6 +27,11 @@ $(SOURCE)/Solver.o:
 $(SOURCE)/Viewer.o:
 	g++ -c $(SOURCE)/Viewer.cpp -o $(SOURCE)/Viewer.o
 	echo [$(SOURCE)/Viewer.o] -- build successful!
+	
+	
+$(SOURCE)/Generator.o:
+	g++ -c $(SOURCE)/Generator.cpp -o $(SOURCE)/Generator.o
+	echo [$(SOURCE)/Generator.o] -- build successful!
 
 
 $(STRATEGY)/BaseStrategy.o:

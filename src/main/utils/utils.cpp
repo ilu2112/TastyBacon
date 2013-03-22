@@ -1,3 +1,7 @@
+#ifndef UTILS_CPP
+#define UTILS_CPP
+
+
 #include <algorithm>
 #include <queue>
 #include <stdio.h>
@@ -91,3 +95,6 @@ char * getRandomMoveOrder() {
     }
     return result;
 }
+
+
+#endif // UTILS_CPP
