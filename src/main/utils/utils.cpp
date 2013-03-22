@@ -54,16 +54,16 @@ Move * doMove(unsigned int ** matrix, unsigned int zeroRow, unsigned int zeroCol
     int newRow = zeroRow;
     int newCol = zeroCol;
     switch (direction) {
-        case 'D':
+        case 'G':
             ++newRow;
             break;
-        case 'G':
+        case 'D':
             --newRow;
             break;
-        case 'L':
+        case 'P':
             --newCol;
             break;
-        case 'P':
+        case 'L':
             ++newCol;
             break;
     }

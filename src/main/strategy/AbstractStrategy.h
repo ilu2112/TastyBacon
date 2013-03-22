@@ -7,6 +7,8 @@
 class AbstractStrategy {
 
     public:
+    
+        bool statisticsEnabled;
 
         virtual char * solve(GameState * state) = 0;
 

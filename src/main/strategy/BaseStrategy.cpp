@@ -30,6 +30,11 @@ char * BaseStrategy::solve(GameState * state) {
     // create a set of visited states
     set<GameState *, GameState::Comparator> * visitedStates = new set<GameState *, GameState::Comparator>();
 
+    // create statictic parameters
+    unsigned int visitedStatesCount = 0;
+    unsigned int enqueuedStatesCount = 1;
+    unsigned int maxDepthStatistic = 1;
+    
     // initial values
     moveQueue->push(new Move(state, NULL, 'X'));
 
@@ -56,18 +61,28 @@ char * BaseStrategy::solve(GameState * state) {
         } else {
             visitedStates->insert(move->actualState);
         }
+        
+        ++visitedStatesCount;
+        maxDepthStatistic = max(maxDepthStatistic, move->recursionDepth);
 
+        unsigned int ** matrix = move->actualState->getAsArray();
+        
         // check if it is done
         if ( *(move->actualState) == *finalState) {
+            // statistics
+            if (statisticsEnabled) {
+                printf("Visited states: %d\n", visitedStatesCount);
+                printf("Enqueued states: %d\n", enqueuedStatesCount);
+                printf("Max depth: %d\n", maxDepthStatistic);
+            }
+            // result
             while (move->prevMove != NULL) {
                 finalSteps.push(move->movement);
                 move = move->prevMove;
             }
             break;
         }
-
-        unsigned int ** matrix = move->actualState->getAsArray();
-
+        
         // find '0'
         for(unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
             for(unsigned int iCol = 0; iCol < GameState::cols; iCol++) {
@@ -84,12 +99,13 @@ char * BaseStrategy::solve(GameState * state) {
                         Move * nextMove = doMove(matrix, iRow, iCol, order[i], move);
                         if (nextMove != NULL) {
                             moveQueue->push(nextMove);
+                            ++enqueuedStatesCount;
                         }
                     }
                 }
             }
         }
-
+        
         // clean-up
         for (unsigned int iRow = 0; iRow < GameState::rows; iRow++) {
             delete[] matrix[iRow];
