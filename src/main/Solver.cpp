@@ -5,12 +5,17 @@
 #include "queue/LifoMoveQueue.h"
 #include "queue/BestMatchingPriorityQueue.h"
 #include "queue/ShortestMatchingPriorityQueue.h"
+#include "queue/MyPriorityQueue.h"
 #include "utils/Move.cpp"
 #include "utils/GameState.h"
 #include <string.h>
 #include <stdio.h>
 #include <set>
 #include <unistd.h>
+#include <sys/resource.h>
+#include <time.h>
+
+#define _FILE_OFFSET_BITS 64
 
 // parameters
 const char * BFS_SHORT = "-b";
@@ -23,6 +28,19 @@ const char * AS_LONG = "--a";
 using namespace std;
 
 int main(int argc, char **argv) {
+    // limits
+    // Memory (2GB)
+    rlimit64 memlock;
+    getrlimit64(RLIMIT_AS, &memlock);
+    memlock.rlim_cur = 0x40000000LL * 2;
+    memlock.rlim_max = 0x40000000LL * 2;
+    setrlimit64(RLIMIT_AS, &memlock);
+    // time (30 minutes)
+    rlimit64 timelock;
+    getrlimit64(RLIMIT_CPU, &timelock);
+    timelock.rlim_cur = 0x708;
+    timelock.rlim_max = 0x708;
+    setrlimit64(RLIMIT_CPU, &timelock);
     
     // get input
     unsigned int rows;
@@ -56,17 +74,19 @@ int main(int argc, char **argv) {
             strategy = new BaseStrategy(order, new ShortestMatchingPriorityQueue());
         } else {
             // 3rd heuristic
+            strategy = new BaseStrategy(order, new MyPriorityQueue());
         }
     }
     
-    strategy->statisticsEnabled = false;
+    strategy->statisticsEnabled = true;
     char * answer = strategy->solve(gs);
+    
     if (answer[0] == 'X') {
         printf("-1\n");
     } else {
         int size = strlen(answer);
         printf("%d\n", size);
-        printf("%s\n", answer);
+        // printf("%s\n", answer);
     }
     
     return 0;

@@ -11,7 +11,7 @@ QUEUE=$(SOURCE)/queue
 TastyBacon: $(SOURCE)/Solver.o $(UTILS)/utils.o $(STRATEGY)/BaseStrategy.o $(UTILS)/GameState.o \
 		    $(QUEUE)/FifoMoveQueue.o $(QUEUE)/LifoMoveQueue.o $(QUEUE)/AbstractPriorityQueue.o \
 		    ${QUEUE}/BestMatchingPriorityQueue.o ${QUEUE}/ShortestMatchingPriorityQueue.o $(SOURCE)/Viewer.o \
-		    $(SOURCE)/Generator.o
+		    $(SOURCE)/Generator.o ${QUEUE}/MyPriorityQueue.o
 	g++ $(STRATEGY)/*.o $(UTILS)/*.o $(SOURCE)/Solver.o $(QUEUE)/*.o -o Solver
 	g++ $(SOURCE)/Viewer.o -lncurses -o Viewer
 	g++ $(STRATEGY)/*.o $(UTILS)/GameState.o $(SOURCE)/Generator.o $(QUEUE)/*.o -o Generator
@@ -77,6 +77,10 @@ ${QUEUE}/BestMatchingPriorityQueue.o:
 ${QUEUE}/ShortestMatchingPriorityQueue.o:
 	g++ -c $(QUEUE)/ShortestMatchingPriorityQueue.cpp -o $(QUEUE)/ShortestMatchingPriorityQueue.o
 	echo [${QUEUE}/ShortestMatchingPriorityQueue.o] -- build successful!
+
+${QUEUE}/MyPriorityQueue.o:
+	g++ -c $(QUEUE)/MyPriorityQueue.cpp -o $(QUEUE)/MyPriorityQueue.o
+	echo [${QUEUE}/MyPriorityQueue.o] -- build successful!
 
 clean:
 	rm -f $(SOURCE)/*.o
