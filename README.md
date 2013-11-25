@@ -1,4 +1,4 @@
 TastyBacon
 ==========
 
-Fifteen puzzle solver
+Fifteen puzzle solver written for an academic purposes.
